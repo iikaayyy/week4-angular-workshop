@@ -1,19 +1,29 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <ul class="nav navbar-nav">
+    <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/">Home</a>  <!-- Link to Home -->
+        <a class="nav-link"
+           routerLink="/"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">Home</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/login">Login</a>  <!-- Link to Login -->
+
+      <!-- Show when NOT logged in -->
+      <li class="nav-item" *ngIf="!loggedIn">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/profile">Profile</a>  <!-- Link to Profile -->
+
+      <!-- Show when logged in -->
+      <li class="nav-item" *ngIf="loggedIn">
+        <a class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn">
+        <a class="nav-link" role="button" (click)="logout()">Logout</a>
       </li>
     </ul>
   </div>
 </nav>
 
 <div class="container mt-4">
-  <router-outlet></router-outlet>  <!-- Routed content will go here -->
+  <router-outlet></router-outlet>
 </div>

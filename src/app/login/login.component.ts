@@ -1,37 +1,55 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
+interface AuthResponse {
+  username: string;
+  birthdate: string;
+  age: number;
+  email: string;
+  valid: boolean;
+}
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],  // Import necessary modules
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  errorMessage: string = '';
+  private http = inject(HttpClient);
+  private router = inject(Router);
 
-  users = [
-    { email: 'user1@test.com', password: '12345' },
-    { email: 'user2@test.com', password: 'abcde' },
-    { email: 'user3@test.com', password: 'password' }
-  ];
-
-  constructor(private router: Router) {}
+  email = '';
+  password = '';
+  errorMessage = '';
+  isSubmitting = false;
 
   login() {
-    const found = this.users.find(
-      u => u.email === this.email && u.password === this.password
-    );
-    if (found) {
-      this.errorMessage = '';
-      this.router.navigate(['/profile']);  // Navigate to Profile on successful login
-    } else {
-      this.errorMessage = 'Invalid email or password';  // Show error message
-    }
+    this.errorMessage = '';
+    this.isSubmitting = true;
+
+    this.http.post<AuthResponse>('http://localhost:3000/api/auth', {
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: (res) => {
+        if (res?.valid) {
+          localStorage.setItem('currentUser', JSON.stringify(res));
+          this.email = '';
+          this.password = '';
+          this.router.navigate(['/profile']);
+        } else {
+          this.errorMessage = 'Invalid email or password';
+        }
+      },
+      error: () => {
+        this.errorMessage = 'Login service unavailable. Is the Node server running on :3000?';
+      },
+      complete: () => this.isSubmitting = false
+    });
   }
 }

@@ -1,16 +1,21 @@
-<div class="container mt-4">
-    <h2>Login</h2>
-    <form (ngSubmit)="login()">
-      <div class="mb-3">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="email" name="email" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label>Password</label>
-        <input type="password" [(ngModel)]="password" name="password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Login</button>
-      <div *ngIf="errorMessage" class="alert alert-danger mt-2">{{ errorMessage }}</div>  <!-- Error message -->
-    </form>
-  </div>
-  
+<div class="container mt-4" style="max-width:420px">
+  <h2 class="mb-3">Login</h2>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="login()">
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input class="form-control" type="email" [(ngModel)]="email" name="email" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input class="form-control" type="password" [(ngModel)]="password" name="password" required />
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Logging in...' : 'Login' }}
+    </button>
+  </form>
+</div>
