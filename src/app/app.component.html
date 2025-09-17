@@ -17,6 +17,12 @@
       <li class="nav-item" *ngIf="loggedIn">
         <a class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
       </li>
+
+      <!-- NEW: Chat link -->
+      <li class="nav-item" *ngIf="loggedIn">
+        <a class="nav-link" routerLink="/chat" routerLinkActive="active">Chat</a>
+      </li>
+
       <li class="nav-item" *ngIf="loggedIn">
         <a class="nav-link" role="button" (click)="logout()">Logout</a>
       </li>
